@@ -36,7 +36,7 @@ class Customer
     {
         //include_once __DIR__ . '/Database.php';
         $this->database = $database;
-        
+
         if (array_key_exists('customer_id', $customerData) === true) {
             $this->customerId = $customerData['customer_id'];
         } elseif (array_key_exists('phone', $customerData) === true) {
