@@ -19,19 +19,42 @@ class customersApi extends Api
         // TODO: Implement indexAction() method.
     }
 
-    protected function viewAction()
+    /** выдаёт информацию о покупателе
+     *
+     * @return string
+     */
+    protected function viewAction(): string
     {
-        // TODO: Implement viewAction() method.
+        $database = new Database();
+        $customer = new Customer($this->requestParams, $this->action, $database);
+        return $this->response($customer->prepareExportArray(), 200);
     }
 
+    /** Добавляет нового покупателя в базу данных
+     * @return false|string
+     */
     protected function createAction()
     {
-        // TODO: Implement createAction() method.
+        $database = new Database();
+        new Customer($this->requestParams, $this->action, $database);
+        return $this->response('customer added successfully', 200);
     }
 
+    /**
+     * @return false|string
+     */
     protected function updateAction()
     {
-        // TODO: Implement updateAction() method.
+        $database = new Database();
+        $customer = new Customer($this->requestParams, $this->action, $database);
+        if (array_key_exists('changeBonus',$this->requestParams)) {
+            $customer->changeBonuses($this->requestParams['changeBonus']);
+        }
+        if (array_key_exists('newDiscount',$this->requestParams)) {
+            $customer->setDiscount($this->requestParams['newDiscount']);
+        }
+
+        return $this->response('change successful', 200);
     }
 
     protected function deleteAction()

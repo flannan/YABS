@@ -47,7 +47,7 @@ class Customer
         }
 
         $customerExists = $this->checkCustomerExists();
-        if ($action === 'create_action') {
+        if ($action === 'createAction') {
             if ($customerExists) {
                 throw new InvalidArgumentException('User already exists');
             }
@@ -61,8 +61,11 @@ class Customer
                 $this->birthday[2] = null;
             }
             $this->writeCustomerToDatabase();
-        } elseif ($customerExists === false) {
-            throw new InvalidArgumentException('User not found');
+        } else {
+            if ($customerExists === false) {
+                throw new InvalidArgumentException('User not found');
+            }
+            $this->retrieveBonuses();
         }
     }
 
@@ -108,13 +111,39 @@ class Customer
         if ($this->birthday[2] !== null) {
             $exportArray['birthYear'] = $this->birthday[2];
         }
-        if ($this->balance !== null) {
+        if (isset($this->balance)) {
             $exportArray['balance'] = $this->balance;
         }
-        if ($this->discount !== null) {
+        if (isset($this->discount)) {
             $exportArray['discount'] = $this->discount;
         }
         return $exportArray;
     }
 
+    public function retrieveBonuses(): void
+    {
+        //stub
+        $this->balance = 100;
+        $this->discount = 0;
+    }
+
+    /**
+     * @param $change
+     */
+    public function changeBonuses($change): void
+    {
+        //stub
+        $this->balance += $change;
+
+    }
+
+    /**
+     * @param $newDiscount
+     */
+    public function setDiscount($newDiscount): void
+    {
+        //stub
+        $this->discount = $newDiscount;
+
+    }
 }
