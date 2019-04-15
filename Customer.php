@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace flannan\YABS;
 
 use InvalidArgumentException;
-use flannan\YABS\Database;
+//use flannan\YABS\Database;
 
 /**
  * Class Customer
@@ -14,6 +14,7 @@ use flannan\YABS\Database;
  */
 class Customer
 {
+    protected $name;
     protected $customerId;
     private $database;
     protected $gender; //M/F/O
@@ -36,7 +37,7 @@ class Customer
     {
         //include_once __DIR__ . '/Database.php';
         $this->database = $database;
-
+        //var_dump($customerData);
         if (array_key_exists('customer_id', $customerData) === true) {
             $this->customerId = $customerData['customer_id'];
         } elseif (array_key_exists('phone', $customerData) === true) {
@@ -51,10 +52,11 @@ class Customer
             if ($customerExists) {
                 throw new InvalidArgumentException('User already exists');
             }
-
+            $this->name = $customerData['name'];
             $this->gender = $customerData['gender'];
             $this->birthday[0] = $customerData['birthDay'];
             $this->birthday[1] = $customerData['birthMonth'];
+            $this->phone = $customerData['phone'];
             if (array_key_exists('birthYear', $customerData) === true) {
                 $this->birthday[2] = $customerData['birthYear'];
             } else {

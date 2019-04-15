@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace flannan\YABS;
 
+use Exception;
+use RuntimeException;
+
 /** Базовый класс Api
  * Class Api
  */
@@ -18,6 +21,11 @@ abstract class Api
     protected $action = ''; //Название метод для выполнения
 
 
+    /**
+     * Api constructor.
+     *
+     * @throws \Exception
+     */
     public function __construct()
     {
         header('Access-Control-Allow-Orgin: *');
@@ -26,7 +34,7 @@ abstract class Api
 
         //Массив GET параметров разделенных слешем
         $this->requestUri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
-        $this->requestParams = $_REQUEST;
+        $this->requestParams = json_decode(file_get_contents('php://input'), true);
 
         //Определение метода запроса
         $this->method = $_SERVER['REQUEST_METHOD'];
@@ -47,7 +55,7 @@ abstract class Api
     public function run()
     {
         //Первые 2 элемента массива URI должны быть "api" и название таблицы
-        if (($this->requestUri[0]) !== 'api' || ($this->requestUri[1]) !== $this->apiName) {
+        if ($this->requestUri[0] !== 'api' || $this->requestUri[1] !== $this->apiName) {
             throw new RuntimeException('API Not Found', 404);
         }
         //Определение действия для обработки
@@ -66,9 +74,10 @@ abstract class Api
      *
      * @return false|string
      */
+
     protected function response($data, $status = 500)
     {
-        header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
+        header('HTTP/1.1 ' . $status . ' ' . $this->requestStatus($status));
         return json_encode($data);
     }
 
@@ -83,7 +92,7 @@ abstract class Api
             200 => 'OK',
             404 => 'Not Found',
             405 => 'Method Not Allowed',
-            500 => 'Internal Server Error',
+            500 => 'Internal Server Error'
         ];
         return $status[$code] ?: $status[500];
     }

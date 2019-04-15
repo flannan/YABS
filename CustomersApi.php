@@ -3,20 +3,21 @@ declare(strict_types=1);
 
 namespace flannan\YABS;
 
-use flannan\YABS\Api;
-use flannan\YABS\Customer;
-
 /**
  * Class customersApi
  *
  * @package flannan\YABS
  */
-class customersApi extends Api
+class CustomersApi extends Api
 {
+    public $apiName = 'customers';
 
+    /**
+     * @return false|string
+     */
     protected function indexAction()
     {
-        // TODO: Implement indexAction() method.
+        return $this->response('API not implemented', 405);
     }
 
     /** выдаёт информацию о покупателе
@@ -26,11 +27,20 @@ class customersApi extends Api
     protected function viewAction(): string
     {
         $database = new Database();
-        $customer = new Customer($this->requestParams, $this->action, $database);
-        return $this->response($customer->prepareExportArray(), 200);
+        if (isset($this->requestParams)) {
+            $customer = new Customer($this->requestParams, $this->action, $database);
+            $response = $customer->prepareExportArray();
+            $status = 200;
+        } else {
+            $response = 'No instructions found';
+            $status = 404;
+        }
+
+        return $this->response($response, $status);
     }
 
     /** Добавляет нового покупателя в базу данных
+     *
      * @return false|string
      */
     protected function createAction()
@@ -47,18 +57,21 @@ class customersApi extends Api
     {
         $database = new Database();
         $customer = new Customer($this->requestParams, $this->action, $database);
-        if (array_key_exists('changeBonus',$this->requestParams)) {
+        if (array_key_exists('changeBonus', $this->requestParams)) {
             $customer->changeBonuses($this->requestParams['changeBonus']);
         }
-        if (array_key_exists('newDiscount',$this->requestParams)) {
+        if (array_key_exists('newDiscount', $this->requestParams)) {
             $customer->setDiscount($this->requestParams['newDiscount']);
         }
 
         return $this->response('change successful', 200);
     }
 
+    /**
+     * @return false|string
+     */
     protected function deleteAction()
     {
-        // TODO: Implement deleteAction() method.
+        return $this->response('API not implemented', 405);
     }
 }
