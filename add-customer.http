@@ -10,8 +10,8 @@ POST http://alias/api/customers
 Content-Type: application/json
 
 {
-  "name": "ivan",
-  "customer_id": "12345",
+  "name": "Иванов Иван Иванович",
+  "customer_id": "1",
   "phone": "1234567890",
   "gender": "M",
   "birthDay": "20",

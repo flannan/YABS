@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace flannan\YABS;
 
 use InvalidArgumentException;
+use RuntimeException;
+
 //use flannan\YABS\Database;
 
 /**
@@ -38,9 +40,9 @@ class Customer
         //include_once __DIR__ . '/Database.php';
         $this->database = $database;
         //var_dump($customerData);
-        if (array_key_exists('customer_id', $customerData) === true) {
+        if (\array_key_exists('customer_id', $customerData) === true) {
             $this->customerId = $customerData['customer_id'];
-        } elseif (array_key_exists('phone', $customerData) === true) {
+        } elseif (\array_key_exists('phone', $customerData) === true) {
             $this->phone = $customerData['phone'];
             $this->customerId = $this->getCardByPhone();
         } else {
@@ -54,9 +56,9 @@ class Customer
             }
             $this->name = $customerData['name'];
             $this->gender = $customerData['gender'];
+            $this->phone = $customerData['phone'];
             $this->birthday[0] = $customerData['birthDay'];
             $this->birthday[1] = $customerData['birthMonth'];
-            $this->phone = $customerData['phone'];
             if (array_key_exists('birthYear', $customerData) === true) {
                 $this->birthday[2] = $customerData['birthYear'];
             } else {
@@ -73,28 +75,56 @@ class Customer
 
     /** Находит в базе данных телефон и возвращает номер карты.
      *
-     * @param int $phone
-     *
      * @return int
      */
     private function getCardByPhone(): int
     {
-        //stub
-        return $this->phone;
+        $sqlQuery = <<<SQL
+SELECT card_id
+FROM customers
+WHERE phone=$this->phone
+LIMIT 1;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        $card = mysqli_fetch_all($result);
+        $card = $card[0];
+        return $card;
     }
 
-    /**
+    /** Проверяет существование покупателя в базе.
+     *
      * @return bool
      */
     private function checkCustomerExists(): bool
     {
-        //stub
-        return true;
+        $sqlQuery = <<<SQL
+SELECT card_id
+FROM customers
+WHERE card_id=$this->customerId
+LIMIT 1;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        return \count(mysqli_fetch_all($result)) > 0;
     }
 
+    /** Добавляет покупателя в базу данных.
+     *
+     */
     private function writeCustomerToDatabase(): void
     {
-        //stub
+        $sqlQuery = <<<SQL
+INSERT INTO cards(id,status)
+VALUES ($this->customerId,'Active');
+
+INSERT INTO customers(card_id,name,phone,gender,birthDay,birthMonth,birthYear)
+VALUES ($this->customerId,'$this->name',$this->phone,'$this->gender',
+        {$this->birthday[0]},{$this->birthday[1]},{$this->birthday[2]});
+SQL;
+        echo $sqlQuery . PHP_EOL;
+        $result = mysqli_multi_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('User adding operation failed');
+        }
     }
 
     /** Выдаёт данные для передачи в клиентскую систему.
@@ -124,9 +154,16 @@ class Customer
 
     public function retrieveBonuses(): void
     {
-        //stub
-        $this->balance = 100;
-        $this->discount = 0;
+        $sqlQuery = <<<SQL
+SELECT balance, discount
+FROM cards
+WHERE id=$this->customerId
+LIMIT 1;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        $result = mysqli_fetch_all($result);
+        $this->balance = $result[0];
+        $this->discount = $result[1];
     }
 
     /**
@@ -136,7 +173,6 @@ class Customer
     {
         //stub
         $this->balance += $change;
-
     }
 
     /**
@@ -146,6 +182,5 @@ class Customer
     {
         //stub
         $this->discount = $newDiscount;
-
     }
 }

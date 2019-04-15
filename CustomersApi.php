@@ -29,6 +29,7 @@ class CustomersApi extends Api
         $database = new Database();
         if (isset($this->requestParams)) {
             $customer = new Customer($this->requestParams, $this->action, $database);
+            $customer->retrieveBonuses();
             $response = $customer->prepareExportArray();
             $status = 200;
         } else {

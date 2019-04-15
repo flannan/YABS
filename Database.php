@@ -20,11 +20,13 @@ class Database
     private $port = 3306;
 
     /** Выдаёт ссылку для работы с базой данных.
+     *
      * @return \mysqli
      */
     public function getConnection(): mysqli
     {
         $mysqli = new mysqli($this->host, $this->login, $this->password, $this->databaseName, $this->port);
+        $mysqli->set_charset('utf8');
         return $mysqli;
     }
 }
