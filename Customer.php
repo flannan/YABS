@@ -7,8 +7,6 @@ namespace flannan\YABS;
 use InvalidArgumentException;
 use RuntimeException;
 
-//use flannan\YABS\Database;
-
 /**
  * Class Customer
  *
@@ -24,8 +22,6 @@ class Customer
     protected $phone;
     protected $balance;
     protected $discount;
-    //private $max_card_id = 100000;
-
 
     /**
      * Customer constructor.
@@ -37,12 +33,12 @@ class Customer
      */
     public function __construct(array $customerData, string $action, Database $database)
     {
-        //include_once __DIR__ . '/Database.php';
+
         $this->database = $database;
-        //var_dump($customerData);
-        if (\array_key_exists('customer_id', $customerData) === true) {
+
+        if (array_key_exists('customer_id', $customerData) === true) {
             $this->customerId = $customerData['customer_id'];
-        } elseif (\array_key_exists('phone', $customerData) === true) {
+        } elseif (array_key_exists('phone', $customerData) === true) {
             $this->phone = $customerData['phone'];
             $this->customerId = $this->getCardByPhone();
         } else {
@@ -86,8 +82,8 @@ WHERE phone=$this->phone
 LIMIT 1;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        $card = mysqli_fetch_all($result);
-        $card = $card[0];
+        $card = mysqli_fetch_array($result);
+        $card = (int)$card['card_id'];
         return $card;
     }
 
@@ -104,7 +100,7 @@ WHERE card_id=$this->customerId
 LIMIT 1;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        return \count(mysqli_fetch_all($result)) > 0;
+        return count(mysqli_fetch_all($result)) > 0;
     }
 
     /** Добавляет покупателя в базу данных.
@@ -133,7 +129,10 @@ SQL;
      */
     public function prepareExportArray(): array
     {
+        $this->retrieveCustomerData();
+        $this->retrieveBonuses();
         $exportArray = [
+            'name' => $this->name,
             'customer_id' => $this->customerId,
             'phone' => $this->phone,
             'gender' => $this->gender,
@@ -171,8 +170,17 @@ SQL;
      */
     public function changeBonuses($change): void
     {
-        //stub
-        $this->balance += $change;
+        $newBalance = $this->balance + $change;
+        $sqlQuery = <<<SQL
+UPDATE cards
+SET balance=$newBalance
+WHERE id=$this->customerId;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Balance update operation failed');
+        }
+        $this->balance = $newBalance;
     }
 
     /**
@@ -180,7 +188,33 @@ SQL;
      */
     public function setDiscount($newDiscount): void
     {
-        //stub
+        $sqlQuery = <<<SQL
+UPDATE cards
+SET discount=$newDiscount
+WHERE id=$this->customerId;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Discount change operation failed');
+        }
         $this->discount = $newDiscount;
+    }
+
+    protected function retrieveCustomerData(): void
+    {
+        $sqlQuery = <<<SQL
+SELECT name,gender,phone,birthDay,birthMonth,birthYear
+FROM customers
+WHERE card_id=$this->customerId
+LIMIT 1;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        $result = mysqli_fetch_array($result);
+        $this->name = $result[0];
+        $this->gender = $result[1];
+        $this->phone = $result[2];
+        $this->birthday[0] = $result[3];
+        $this->birthday[1] = $result[4];
+        $this->birthday[2] = $result[5];
     }
 }
