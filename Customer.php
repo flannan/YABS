@@ -22,6 +22,7 @@ class Customer
     protected $phone;
     protected $balance;
     protected $discount;
+    protected $turnover;
 
     /**
      * Customer constructor.
@@ -170,15 +171,16 @@ SQL;
     public function retrieveBonuses(): void
     {
         $sqlQuery = <<<SQL
-SELECT balance, discount
+SELECT balance, discount, turnover
 FROM cards
 WHERE id=$this->customerId
 LIMIT 1;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        $result = mysqli_fetch_all($result);
-        $this->balance = $result[0];
-        $this->discount = $result[1];
+        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $this->balance = $result['balance'];
+        $this->discount = $result['discount'];
+        $this->turnover = $result['turnover'];
     }
 
     /**
@@ -207,6 +209,7 @@ SQL;
         }
         $this->balance = $newBalance;
     }
+
     /**
      * @param $newDiscount
      */
@@ -242,9 +245,44 @@ SQL;
         $this->birthday[2] = $result[5];
     }
 
-    public function setStatus($newStatus)
+    /**
+     * @param $newStatus
+     */
+    public function setStatus($newStatus): void
     {
-
+        $sqlQuery = <<<SQL
+UPDATE cards
+SET status=$newStatus
+WHERE id=$this->customerId;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Status change operation failed');
+        }
     }
 
+    /**
+     * @return bool
+     */
+    public function isBirthday(): bool
+    {
+        $date=getdate();
+        return (($this->birthday[0] === $date['mday']) && ($this->birthday[1] === $date['mon']));
+    }
+
+    public function getDiscount()
+    {
+        if (isset($this->discount) === false) {
+            $this->retrieveBonuses();
+        }
+        return $this->discount;
+    }
+
+    public function getTurnover()
+    {
+        if (isset($this->turnover) === false) {
+            $this->retrieveBonuses();
+        }
+        return $this->turnover;
+    }
 }

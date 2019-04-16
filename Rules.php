@@ -60,8 +60,72 @@ SQL;
     public function apply(Customer $customer, float $receipt): void
     {
         if ($this->apply === true) {
-            $change = $receipt * 0.05;
+            $finalRule = [
+                'multiplier' => 1,
+                'add' => 0,
+                'percentage' => 0,
+                'discount' => 0,
+            ];
+            foreach ($this->rules as $rule) {
+                switch ($rule['type']) {
+                    case 'birthday':
+                        if ($customer->isBirthday()) {
+                            $this->addRules($finalRule, $rule);
+                        }
+                        break;
+                    case 'lump_sum':
+                        if ($receipt > $rule['condition_value']) {
+                            $this->addRules($finalRule, $rule);
+                        }
+                        break;
+                    case 'turnover':
+                        if (($receipt + $customer->getTurnover()) > $rule['condition_value']) {
+                            $this->addRules($finalRule, $rule);
+                        }
+                        break;
+                    case 'dates':
+                        if ($this->isHoliday()) {
+                            $this->addRules($finalRule, $rule);
+                        }
+                        break;
+                }
+            }
+            $change = ($receipt * $finalRule['percentage'] + $finalRule['add']) * $finalRule['multiplier'];
             $customer->changeBonuses($change);
+            if ($customer->getDiscount() < $finalRule['discount']) {
+                $customer->setDiscount($finalRule['discount']);
+            }
         }
+    }
+
+    /** "складывает" два правила по начислению бонусов.
+     *
+     * @param $currentRule
+     * @param $newRule
+     *
+     * @return array
+     */
+    private function addRules($currentRule, $newRule): array
+    {
+        $currentRule['add'] += $newRule['add'];
+        $currentRule['multiplier'] *= $newRule['multiplier'];
+        $currentRule['percentage'] = max($currentRule['percentage'], $newRule['percentage']);
+        $currentRule['discount'] = max($currentRule['discount'], $newRule['discount']);
+        return $currentRule;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isHoliday(): bool
+    {
+
+        $sqlQuery = <<<SQL
+SELECT *
+FROM holidays
+WHERE date={date('Y-m-d')};
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        return count(mysqli_fetch_all($result)) > 0;
     }
 }
