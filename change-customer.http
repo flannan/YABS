@@ -5,20 +5,22 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-GET http://alias/api/customers
+PUT http://alias/api/customers
 Content-Type: application/json
 
 {
-  "phone": "1234567890"
+  "phone": "1234567890",
+  "changeBonus": "+50"
 }
 
 ###
 
-GET http://alias/api/customers
+PUT http://alias/api/customers
 Content-Type: application/json
 
 {
-  "customer_id": "2"
+  "customer_id": "2",
+  "newDiscount": "0.05"
 }
 
 ###

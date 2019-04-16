@@ -111,14 +111,30 @@ SQL;
         $sqlQuery = <<<SQL
 INSERT INTO cards(id,status)
 VALUES ($this->customerId,'Active');
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Card adding operation failed');
+        }
 
+        if ($this->birthday[2] === null) {
+            $year = 'null';
+        } else {
+            $year = $this->birthday[2];
+        }
+
+        $sqlQuery = <<<SQL
 INSERT INTO customers(card_id,name,phone,gender,birthDay,birthMonth,birthYear)
 VALUES ($this->customerId,'$this->name',$this->phone,'$this->gender',
-        {$this->birthday[0]},{$this->birthday[1]},{$this->birthday[2]});
+        {$this->birthday[0]},{$this->birthday[1]},$year);
 SQL;
-        echo $sqlQuery . PHP_EOL;
-        $result = mysqli_multi_query($this->database->getConnection(), $sqlQuery);
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+
         if ($result === false) {
+            $sqlQuery = <<<SQL
+DELETE FROM cards WHERE id={$this->customerId};
+SQL;
+            mysqli_query($this->database->getConnection(), $sqlQuery);
             throw new RuntimeException('User adding operation failed');
         }
     }
@@ -170,7 +186,16 @@ SQL;
      */
     public function changeBonuses($change): void
     {
+        $this->retrieveBonuses();
         $newBalance = $this->balance + $change;
+        $this->setBonuses($newBalance);
+    }
+
+    /**
+     * @param int $newBalance
+     */
+    public function setBonuses(int $newBalance): void
+    {
         $sqlQuery = <<<SQL
 UPDATE cards
 SET balance=$newBalance
@@ -182,7 +207,6 @@ SQL;
         }
         $this->balance = $newBalance;
     }
-
     /**
      * @param $newDiscount
      */
@@ -217,4 +241,10 @@ SQL;
         $this->birthday[1] = $result[4];
         $this->birthday[2] = $result[5];
     }
+
+    public function setStatus($newStatus)
+    {
+
+    }
+
 }

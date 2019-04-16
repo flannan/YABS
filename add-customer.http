@@ -6,7 +6,6 @@
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
 POST http://alias/api/customers
-#POST http://requestbin.fullcontact.com/1e1pwpp1
 Content-Type: application/json
 
 {
@@ -21,3 +20,30 @@ Content-Type: application/json
 
 ###
 
+POST http://alias/api/customers
+Content-Type: application/json
+
+{
+  "name": "Анна",
+  "customer_id": "2",
+  "phone": "0987654321",
+  "gender": "F",
+  "birthDay": "20",
+  "birthMonth": "3"
+}
+
+###
+
+POST http://alias/api/customers
+Content-Type: application/json
+
+{
+  "name": "Мария Соколова",
+  "customer_id": "789654321",
+  "phone": "789654321",
+  "gender": "F",
+  "birthDay": "31",
+  "birthMonth": "1"
+}
+
+###

@@ -47,7 +47,9 @@ class CustomersApi extends Api
     protected function createAction()
     {
         $database = new Database();
-        new Customer($this->requestParams, $this->action, $database);
+        $customer=new Customer($this->requestParams, $this->action, $database);
+        $rules = new Rules($database);
+        $rules->initialize($customer);
         return $this->response('customer added successfully', 200);
     }
 
@@ -63,6 +65,9 @@ class CustomersApi extends Api
         }
         if (array_key_exists('newDiscount', $this->requestParams)) {
             $customer->setDiscount($this->requestParams['newDiscount']);
+        }
+        if (array_key_exists('newStatus', $this->requestParams)) {
+            $customer->setStatus($this->requestParams['newStatus']);
         }
 
         return $this->response('change successful', 200);
