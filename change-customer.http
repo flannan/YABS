@@ -24,3 +24,23 @@ Content-Type: application/json
 }
 
 ###
+
+PUT http://alias/api/customers
+Content-Type: application/json
+
+{
+  "customer_id": "2",
+  "receipt": "12.15"
+}
+
+###
+
+PUT http://alias/api/customers
+Content-Type: application/json
+
+{
+  "customer_id": "3",
+  "receipt": "1215"
+}
+
+###

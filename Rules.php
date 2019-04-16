@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace flannan\YABS;
 
+use RuntimeException;
+
 /**
  * Class Rules
  *
@@ -12,18 +14,22 @@ namespace flannan\YABS;
 class Rules
 {
     protected $database;
+    protected $user;
     protected $apply = true;
     protected $bonuses = true;
     protected $rules;
+
 
     /**
      * Rules constructor.
      *
      * @param \flannan\YABS\Database $database
+     * @param \flannan\YABS\User     $user
      */
-    public function __construct(Database $database)
+    public function __construct(Database $database, User $user)
     {
         $this->database = $database;
+        $this->user = $user;
 
         $sqlQuery = <<<SQL
 SELECT bonuses,apply_rules
@@ -36,12 +42,7 @@ SQL;
         $this->apply = (bool)$result['apply_rules'];
         $this->bonuses = (bool)$result['bonuses'];
 
-        $sqlQuery = <<<SQL
-SELECT *
-FROM rules;
-SQL;
-        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        $this->rules = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $this->retrieveRules();
     }
 
     /**
@@ -51,6 +52,7 @@ SQL;
     {
         $customer->setDiscount(0);
         $customer->setBonuses(0);
+        $this->apply($customer, 0);
     }
 
     /**
@@ -67,27 +69,8 @@ SQL;
                 'discount' => 0,
             ];
             foreach ($this->rules as $rule) {
-                switch ($rule['type']) {
-                    case 'birthday':
-                        if ($customer->isBirthday()) {
-                            $this->addRules($finalRule, $rule);
-                        }
-                        break;
-                    case 'lump_sum':
-                        if ($receipt > $rule['condition_value']) {
-                            $this->addRules($finalRule, $rule);
-                        }
-                        break;
-                    case 'turnover':
-                        if (($receipt + $customer->getTurnover()) > $rule['condition_value']) {
-                            $this->addRules($finalRule, $rule);
-                        }
-                        break;
-                    case 'dates':
-                        if ($this->isHoliday()) {
-                            $this->addRules($finalRule, $rule);
-                        }
-                        break;
+                if ($this->checkRule($rule, $customer, $receipt)) {
+                    $finalRule=$this->sumRules($finalRule, $rule);
                 }
             }
             $change = ($receipt * $finalRule['percentage'] + $finalRule['add']) * $finalRule['multiplier'];
@@ -105,13 +88,48 @@ SQL;
      *
      * @return array
      */
-    private function addRules($currentRule, $newRule): array
+    private function sumRules($currentRule, $newRule): array
     {
-        $currentRule['add'] += $newRule['add'];
-        $currentRule['multiplier'] *= $newRule['multiplier'];
-        $currentRule['percentage'] = max($currentRule['percentage'], $newRule['percentage']);
-        $currentRule['discount'] = max($currentRule['discount'], $newRule['discount']);
+        if (isset($newRule['add'])) {
+            $currentRule['add'] += $newRule['add'];
+        }
+        if (isset($newRule['multiplier'])) {
+            $currentRule['multiplier'] *= $newRule['multiplier'];
+        }
+        if (isset($newRule['percentage'])) {
+            $currentRule['percentage'] = max($currentRule['percentage'], $newRule['percentage']);
+        }
+        if (isset($newRule['discount'])) {
+            $currentRule['discount'] = max($currentRule['discount'], $newRule['discount']);
+        }
         return $currentRule;
+    }
+
+    /**
+     * @param array                  $rule
+     * @param \flannan\YABS\Customer $customer
+     * @param float                  $receipt
+     *
+     * @return bool
+     */
+    private function checkRule(array $rule, Customer $customer, float $receipt): bool
+    {
+        $applies = false;
+        switch ($rule['type']) {
+            case 'birthday':
+                $applies = $customer->isBirthday();
+                break;
+            case 'lump_sum':
+                $applies = ($receipt > $rule['condition_value']);
+                break;
+            case 'turnover':
+                $applies = ($customer->getTurnover() > $rule['condition_value']);
+                break;
+            case 'dates':
+                $applies = $this->isHoliday();
+                break;
+        }
+        return $applies;
     }
 
     /**
@@ -119,7 +137,6 @@ SQL;
      */
     private function isHoliday(): bool
     {
-
         $sqlQuery = <<<SQL
 SELECT *
 FROM holidays
@@ -127,5 +144,44 @@ WHERE date={date('Y-m-d')};
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         return count(mysqli_fetch_all($result)) > 0;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getRules(): ?array
+    {
+        return $this->rules;
+    }
+
+    private function retrieveRules(): void
+    {
+        $sqlQuery = <<<SQL
+SELECT *
+FROM rules;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        $this->rules = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+
+    /**
+     * @param $rule
+     */
+    public function addRule($rule): void
+    {
+        if ($this->user->isManager() === false) {
+            throw new RuntimeException('Access denied. Manager level necessary.');
+        }
+        $sqlQuery = <<<SQL
+INSERT INTO rules(type,condition_value,bonus,multiplier,percentage,discount)
+VALUES ('{$rule['type']}',{$rule['condition_value']},
+        {$rule['bonus']},{$rule['multiplier']},{$rule['percentage']},{$rule['discount']});
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Rule adding operation failed');
+        }
+        $this->retrieveRules();
     }
 }

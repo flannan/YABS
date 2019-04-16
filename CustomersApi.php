@@ -10,7 +10,11 @@ namespace flannan\YABS;
  */
 class CustomersApi extends Api
 {
-    public $apiName = 'customers';
+    public function __construct()
+    {
+        parent::__construct();
+        $this->apiName = 'customers';
+    }
 
     /**
      * @return false|string
@@ -27,8 +31,9 @@ class CustomersApi extends Api
     protected function viewAction(): string
     {
         $database = new Database();
+        $user = new User($database);
         if (isset($this->requestParams)) {
-            $customer = new Customer($this->requestParams, $this->action, $database);
+            $customer = new Customer($this->requestParams, $this->action, $database, $user);
             $customer->retrieveBonuses();
             $response = $customer->prepareExportArray();
             $status = 200;
@@ -47,8 +52,9 @@ class CustomersApi extends Api
     protected function createAction()
     {
         $database = new Database();
-        $customer=new Customer($this->requestParams, $this->action, $database);
-        $rules = new Rules($database);
+        $user = new User($database);
+        $customer = new Customer($this->requestParams, $this->action, $database, $user);
+        $rules = new Rules($database, $user);
         $rules->initialize($customer);
         return $this->response('customer added successfully', 200);
     }
@@ -59,7 +65,8 @@ class CustomersApi extends Api
     protected function updateAction()
     {
         $database = new Database();
-        $customer = new Customer($this->requestParams, $this->action, $database);
+        $user = new User($database);
+        $customer = new Customer($this->requestParams, $this->action, $database, $user);
         if (array_key_exists('changeBonus', $this->requestParams)) {
             $customer->changeBonuses($this->requestParams['changeBonus']);
         }
@@ -68,6 +75,11 @@ class CustomersApi extends Api
         }
         if (array_key_exists('newStatus', $this->requestParams)) {
             $customer->setStatus($this->requestParams['newStatus']);
+        }
+        if (array_key_exists('receipt', $this->requestParams)) {
+            $rules = new Rules($database, $user);
+            $customer->addTurnover((float) $this->requestParams['receipt']);
+            $rules->apply($customer, (float) $this->requestParams['receipt']);
         }
 
         return $this->response('change successful', 200);

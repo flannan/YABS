@@ -17,6 +17,7 @@ class Customer
     protected $name;
     protected $customerId;
     private $database;
+    private $user;
     protected $gender; //M/F/O
     protected $birthday = [0, 0, 0];
     protected $phone;
@@ -31,11 +32,13 @@ class Customer
      *
      * @param string                 $action
      * @param \flannan\YABS\Database $database
+     * @param \flannan\YABS\User     $user
      */
-    public function __construct(array $customerData, string $action, Database $database)
+    public function __construct(array $customerData, string $action, Database $database, User $user)
     {
 
         $this->database = $database;
+        $this->user = $user;
 
         if (array_key_exists('customer_id', $customerData) === true) {
             $this->customerId = $customerData['customer_id'];
@@ -156,15 +159,13 @@ SQL;
             'birthDay' => $this->birthday[0],
             'birthMonth' => $this->birthday[1],
         ];
-        if ($this->birthday[2] !== null) {
+  //      if ($this->birthday[2] !== null) {
             $exportArray['birthYear'] = $this->birthday[2];
-        }
-        if (isset($this->balance)) {
-            $exportArray['balance'] = $this->balance;
-        }
-        if (isset($this->discount)) {
-            $exportArray['discount'] = $this->discount;
-        }
+//        }
+        $exportArray['balance'] = $this->balance;
+        $exportArray['discount'] = $this->discount;
+        $exportArray['turnover'] = $this->turnover;
+
         return $exportArray;
     }
 
@@ -177,10 +178,10 @@ WHERE id=$this->customerId
 LIMIT 1;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        $result = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        $this->balance = $result['balance'];
-        $this->discount = $result['discount'];
-        $this->turnover = $result['turnover'];
+        $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        $this->balance = (float)$result['balance'];
+        $this->discount = (float)$result['discount'];
+        $this->turnover = (float)$result['turnover'];
     }
 
     /**
@@ -196,7 +197,7 @@ SQL;
     /**
      * @param int $newBalance
      */
-    public function setBonuses(int $newBalance): void
+    public function setBonuses(float $newBalance): void
     {
         $sqlQuery = <<<SQL
 UPDATE cards
@@ -240,9 +241,13 @@ SQL;
         $this->name = $result[0];
         $this->gender = $result[1];
         $this->phone = $result[2];
-        $this->birthday[0] = $result[3];
-        $this->birthday[1] = $result[4];
-        $this->birthday[2] = $result[5];
+        $this->birthday[0] = (int) $result[3];
+        $this->birthday[1] = (int) $result[4];
+        if ($result[5] === null) {
+            $this->birthday[2] = null;
+        } else {
+            $this->birthday[2] = (int) $result[5];
+        }
     }
 
     /**
@@ -266,7 +271,7 @@ SQL;
      */
     public function isBirthday(): bool
     {
-        $date=getdate();
+        $date = getdate();
         return (($this->birthday[0] === $date['mday']) && ($this->birthday[1] === $date['mon']));
     }
 
@@ -284,5 +289,27 @@ SQL;
             $this->retrieveBonuses();
         }
         return $this->turnover;
+    }
+
+    /**
+     * @param $receipt
+     */
+    public function addTurnover(float $receipt): void
+    {
+        if (isset($this->turnover) === false) {
+            $this->retrieveBonuses();
+        }
+        $newTurnover=$this->turnover + $receipt;
+
+        $sqlQuery = <<<SQL
+UPDATE cards
+SET turnover=$newTurnover
+WHERE id=$this->customerId;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Turnover update operation failed');
+        }
+        $this->turnover = $newTurnover;
     }
 }

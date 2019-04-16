@@ -7,6 +7,7 @@
 
 POST http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {
   "name": "Иванов Иван Иванович",
@@ -22,6 +23,7 @@ Content-Type: application/json
 
 POST http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {
   "name": "Анна",
@@ -36,6 +38,7 @@ Content-Type: application/json
 
 POST http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {
   "name": "Мария Соколова",
@@ -44,6 +47,22 @@ Content-Type: application/json
   "gender": "F",
   "birthDay": "31",
   "birthMonth": "1"
+}
+
+###
+
+POST http://alias/api/customers
+Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+
+{
+  "name": "Юлия Виноградова",
+  "customer_id": 3,
+  "phone": 123654987,
+  "gender": "F",
+  "birthDay": 31,
+  "birthMonth": 1,
+  "birthYear": null
 }
 
 ###

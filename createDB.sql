@@ -9,7 +9,7 @@ drop table IF EXISTS operations;
 create table IF NOT EXISTS users
 (
     name       varchar(255) not null primary key,
-    hash       varchar(255) not null,
+    password   varchar(255) not null,
     is_manager bool
 ) DEFAULT CHARACTER SET = 'utf8';
 
@@ -17,9 +17,9 @@ create table IF NOT EXISTS cards
 (
     id       BIGINT unsigned auto_increment primary key,
     status   varchar(255),
-    balance  DECIMAL null,
-    discount DECIMAL null,
-    turnover DECIMAL not null default 0
+    balance  DECIMAL(10, 2) null,
+    discount DECIMAL(10, 2) null,
+    turnover DECIMAL        not null default 0
 ) DEFAULT CHARACTER SET = 'utf8';
 
 create table IF NOT EXISTS customers
@@ -46,12 +46,12 @@ create table IF NOT EXISTS settings
 create table IF NOT EXISTS rules
 (
     id              tinyint unsigned auto_increment primary key,
-    type            varchar(255) not null,
-    condition_value decimal      null,
-    bonus           decimal,
-    multiplier      decimal,
-    percentage      decimal,
-    discount        decimal
+    type            varchar(255)   not null,
+    condition_value decimal(10, 2) null,
+    bonus           decimal(10, 2),
+    multiplier      decimal(10, 2),
+    percentage      decimal(10, 3),
+    discount        decimal(10, 3)
 ) DEFAULT CHARACTER SET = 'utf8';
 
 create table IF NOT EXISTS operations
@@ -60,7 +60,7 @@ create table IF NOT EXISTS operations
     user_name varchar(255),
     type      varchar(10),
     message   varchar(255),
-    value     DECIMAL null,
+    value     DECIMAL(10, 2) null,
     foreign key (user_name) references users (name)
         ON DELETE SET NULL
 
