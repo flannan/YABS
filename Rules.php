@@ -91,10 +91,10 @@ SQL;
     private function sumRules($currentRule, $newRule): array
     {
         if (isset($newRule['add'])) {
-            $currentRule['add'] += $newRule['add'];
+            $currentRule['add'] = max($currentRule['add'], $newRule['add']);
         }
         if (isset($newRule['multiplier'])) {
-            $currentRule['multiplier'] *= $newRule['multiplier'];
+            $currentRule['multiplier'] = max($currentRule['multiplier'], $newRule['multiplier']);
         }
         if (isset($newRule['percentage'])) {
             $currentRule['percentage'] = max($currentRule['percentage'], $newRule['percentage']);
