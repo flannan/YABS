@@ -66,11 +66,11 @@ SQL;
                 'multiplier' => 1,
                 'add' => 0,
                 'percentage' => 0,
-                'discount' => 0,
+                'discount' => 0
             ];
             foreach ($this->rules as $rule) {
                 if ($this->checkRule($rule, $customer, $receipt)) {
-                    $finalRule=$this->sumRules($finalRule, $rule);
+                    $finalRule = $this->sumRules($finalRule, $rule);
                 }
             }
             $change = ($receipt * $finalRule['percentage'] + $finalRule['add']) * $finalRule['multiplier'];
@@ -147,6 +147,22 @@ SQL;
     }
 
     /**
+     * @param int    $timestamp
+     * @param string $name
+     */
+    public function addHoliday(int $timestamp, string $name): void
+    {
+        $sqlQuery = <<<SQL
+INSERT INTO holidays
+VALUES ({date('Y-m-d',$timestamp)},'$name')
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Holiday date adding operation failed');
+        }
+    }
+
+    /**
      * @return array|null
      */
     public function getRules(): ?array
@@ -170,9 +186,8 @@ SQL;
      */
     public function addRule($rule): void
     {
-        if ($this->user->isManager() === false) {
-            throw new RuntimeException('Access denied. Manager level necessary.');
-        }
+        $this->user->requireManager();
+
         $sqlQuery = <<<SQL
 INSERT INTO rules(type,condition_value,bonus,multiplier,percentage,discount)
 VALUES ('{$rule['type']}',{$rule['condition_value']},
@@ -181,6 +196,44 @@ SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         if ($result === false) {
             throw new RuntimeException('Rule adding operation failed');
+        }
+        $this->retrieveRules();
+    }
+
+    /**
+     * @param $rule
+     */
+    public function replaceRule($rule): void
+    {
+        $this->user->requireManager();
+
+        $sqlQuery = <<<SQL
+REPLACE INTO rules(id,type,condition_value,bonus,multiplier,percentage,discount)
+VALUES ({$rule['id']},'{$rule['type']}',{$rule['condition_value']},
+        {$rule['bonus']},{$rule['multiplier']},{$rule['percentage']},{$rule['discount']});
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Rule changing operation failed');
+        }
+        $this->retrieveRules();
+    }
+
+    /** Удаляет правило по номеру.
+     *
+     * @param int $ruleId
+     */
+    public function removeRule(int $ruleId): void
+    {
+        $this->user->requireManager();
+
+        $sqlQuery = <<<SQL
+DELETE FROM rules
+WHERE id=$ruleId;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Rule deletion operation failed');
         }
         $this->retrieveRules();
     }
