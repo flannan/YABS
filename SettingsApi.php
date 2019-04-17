@@ -48,7 +48,7 @@ class SettingsApi extends Api
         $response = [
             'apply' => $rules->isApplicable(),
             'bonuses' => $rules->isBasedOnBonuses(),
-            'rules' => $rules->getRules(),
+            'rules' => $rules->getRules()
         ];
         return $this->response($response, 200);
     }
@@ -64,7 +64,7 @@ class SettingsApi extends Api
         $rules = new Rules($database, $user);
         if (array_key_exists('id', $this->requestParams)) {
             $rules->replaceRule($this->requestParams);
-            $response = 'rule addded/replaced successfully';
+            $response = 'rule added/replaced successfully';
         } else {
             $rules->addRule($this->requestParams);
             $response = 'rule added successfully';

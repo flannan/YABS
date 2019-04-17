@@ -41,8 +41,9 @@ SQL;
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         $this->applicable = (bool)$result['apply_rules'];
         $this->basedOnBonuses = (bool)$result['bonuses'];
-
-        $this->retrieveRules();
+        if ($this->isApplicable()) {
+            $this->retrieveRules();
+        }
     }
 
     /**
@@ -68,7 +69,7 @@ SQL;
                 'percentage' => 0,
                 'discount' => 0
             ];
-            foreach ($this->rules as $rule) {
+            foreach ((array) $this->rules as $rule) {
                 if ($this->checkRule($rule, $customer, $receipt)) {
                     $finalRule = $this->sumRules($finalRule, $rule);
                 }
@@ -149,14 +150,14 @@ SQL;
     /**
      * @return array|null
      */
-    public function getHolidays():array
+    public function getHolidays(): array
     {
         $sqlQuery = <<<SQL
 SELECT *
 FROM holidays;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        if ($result===false) {
+        if ($result === false) {
             throw new RuntimeException('Holidays not found');
         }
         return mysqli_fetch_all($result);
@@ -198,6 +199,9 @@ FROM rules;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         $this->rules = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        if (is_array($this->rules) === false) {
+            throw new RuntimeException('rules not found');
+        }
     }
 
 

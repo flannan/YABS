@@ -172,7 +172,7 @@ SQL;
             'phone' => $this->phone,
             'gender' => $this->gender,
             'birthDay' => $this->birthday[0],
-            'birthMonth' => $this->birthday[1],
+            'birthMonth' => $this->birthday[1]
         ];
         //      if ($this->birthday[2] !== null) {
         $exportArray['birthYear'] = $this->birthday[2];
