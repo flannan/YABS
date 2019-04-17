@@ -38,7 +38,7 @@ LIMIT 1;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
-        if ($result['password'] !== $_SERVER['PHP_AUTH_PW']) {
+        if (password_verify($result['password'], $_SERVER['PHP_AUTH_PW']) === false) {
             throw new RuntimeException('Authentication failed', 401);
         }
         $this->manager = (bool)$result['is_manager'];
@@ -74,6 +74,7 @@ SQL;
      * @param null   $customerId
      * @param null   $value
      */
+    /** @noinspection MoreThanThreeArgumentsInspection */
     public function log(string $type, string $message, $customerId = null, $value = null): void
     {
         if ($value === null) {

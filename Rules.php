@@ -66,7 +66,7 @@ SQL;
                 'multiplier' => 1,
                 'add' => 0,
                 'percentage' => 0,
-                'discount' => 0
+                'discount' => 0,
             ];
             foreach ($this->rules as $rule) {
                 if ($this->checkRule($rule, $customer, $receipt)) {
@@ -143,7 +143,7 @@ FROM holidays
 WHERE date={date('Y-m-d')};
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        return count(mysqli_fetch_all($result)) > 0;
+        return !empty(mysqli_fetch_all($result));
     }
 
     /**
@@ -160,6 +160,10 @@ SQL;
         if ($result === false) {
             throw new RuntimeException('Holiday date adding operation failed');
         }
+        $this->user->log(
+            'new holiday',
+            'День ' . date('Y-m-d', $timestamp) . ' объявлен праздничным и называется ' . $name
+        );
     }
 
     /**
@@ -197,6 +201,7 @@ SQL;
         if ($result === false) {
             throw new RuntimeException('Rule adding operation failed');
         }
+        $this->logRule($rule, 'добавлено');
         $this->retrieveRules();
     }
 
@@ -216,6 +221,7 @@ SQL;
         if ($result === false) {
             throw new RuntimeException('Rule changing operation failed');
         }
+        $this->logRule($rule, 'заменено');
         $this->retrieveRules();
     }
 
@@ -235,6 +241,38 @@ SQL;
         if ($result === false) {
             throw new RuntimeException('Rule deletion operation failed');
         }
+        $this->user->log('rule change', "Правило №$ruleId удалено.");
         $this->retrieveRules();
+    }
+
+    /**
+     * @param        $rule
+     * @param string $action
+     */
+    private function logRule($rule, string $action): void
+    {
+        $message = $action . ' правило ';
+        if (array_key_exists('id', $rule)) {
+            $message .= "№ {$rule['id']} ";
+        }
+        $message .= 'при условии ' . $rule['type'];
+        if (isset($rule['condition_value'])) {
+            $message .= ' > ' . $rule['condition_value'];
+        }
+        $message .= ' выполнять:';
+        if (isset($rule['condition_value'])) {
+            $message .= ' бонус +' . $rule['bonus'];
+        }
+        if (isset($rule['multiplier'])) {
+            $message .= ' бонусы умножаются на ' . $rule['multiplier'];
+        }
+        if (isset($rule['percentage'])) {
+            $message .= ' выдать бонус на ' . 100 * $rule['percentage'] . '% от чека';
+        }
+        if (isset($rule['discount'])) {
+            $message .= ' выдать скидку на ' . 100 * $rule['discount'] . '% от чека';
+        }
+
+        $this->user->log('rule change', $message);
     }
 }

@@ -7,7 +7,7 @@
 
 GET http://alias/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
 
 {
   "phone": "1234567890"
@@ -17,7 +17,7 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 GET http://alias/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
 
 {
   "customer_id": "2"
@@ -28,7 +28,7 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 GET http://alias/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk=
 
 {
   "customer_id": "3"
