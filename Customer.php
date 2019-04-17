@@ -41,10 +41,10 @@ class Customer
         $this->user = $user;
 
         if (array_key_exists('customer_id', $customerData) === true) {
-            $this->customerId = $customerData['customer_id'];
+            $this->customerId = (string) $customerData['customer_id'];
         } elseif (array_key_exists('phone', $customerData) === true) {
-            $this->phone = $customerData['phone'];
-            $this->customerId = $this->getCardByPhone();
+            $this->phone = (string) $customerData['phone'];
+            $this->customerId = (string) $this->getCardByPhone();
         } else {
             throw new InvalidArgumentException('Not enough data to identify customer');
         }

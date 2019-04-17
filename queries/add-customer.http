@@ -66,3 +66,20 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 }
 
 ###
+
+
+POST http://alias/api/customers
+Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+
+{
+  "name": "Валерий Виноградов",
+  "customer_id": 4,
+  "phone": 147258369,
+  "gender": "M",
+  "birthDay": 31,
+  "birthMonth": 1,
+  "birthYear": 2199
+}
+
+###

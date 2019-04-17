@@ -7,6 +7,7 @@
 
 PUT http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {
   "phone": "1234567890",
@@ -17,6 +18,7 @@ Content-Type: application/json
 
 PUT http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {
   "customer_id": "2",
@@ -27,6 +29,7 @@ Content-Type: application/json
 
 PUT http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {
   "customer_id": "2",
@@ -37,6 +40,7 @@ Content-Type: application/json
 
 PUT http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {
   "customer_id": "3",

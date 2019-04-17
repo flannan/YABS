@@ -69,21 +69,27 @@ SQL;
 
     /** Пишет в логи что скажут.
      *
-     * @param string     $type
-     * @param string     $message
-     * @param int|null   $customerId
-     * @param float|null $value
+     * @param string $type
+     * @param string $message
+     * @param null   $customerId
+     * @param null   $value
      */
-    public function log(string $type, string $message, int $customerId = null, float $value = null): void
+    public function log(string $type, string $message, $customerId = null, $value = null): void
     {
+        if ($value === null) {
+            $value = 'null';
+        }
+        if ($customerId === null) {
+            $customerId = 'null';
+        }
         $sqlQuery = <<<SQL
 INSERT INTO operations (user_name, type, customer_id, message, value)
-VALUE ('$this->userId','$type',$customerId,'$message',$value)
+VALUE ('$this->userId','$type',$customerId,'$message',$value);
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         if ($result === false) {
+            echo $sqlQuery . PHP_EOL;
             throw new RuntimeException('Log writing failed');
         }
     }
-
 }

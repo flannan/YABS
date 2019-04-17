@@ -56,9 +56,9 @@ create table IF NOT EXISTS rules
 
 create table IF NOT EXISTS operations
 (
-    time        timestamp DEFAULT CURRENT_TIMESTAMP primary key,
+    time        timestamp(6) DEFAULT CURRENT_TIMESTAMP(6) primary key,
     user_name   varchar(255),
-    type        varchar(10),
+    type        varchar(20),
     customer_id BIGINT unsigned null,
     message     varchar(255),
     value       DECIMAL(10, 2)  null,
