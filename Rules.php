@@ -15,8 +15,8 @@ class Rules
 {
     protected $database;
     protected $user;
-    protected $apply = true;
-    protected $bonuses = true;
+    protected $applicable = true;
+    protected $basedOnBonuses = true;
     protected $rules;
 
 
@@ -39,8 +39,8 @@ LIMIT 1;
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
-        $this->apply = (bool)$result['apply_rules'];
-        $this->bonuses = (bool)$result['bonuses'];
+        $this->applicable = (bool)$result['apply_rules'];
+        $this->basedOnBonuses = (bool)$result['bonuses'];
 
         $this->retrieveRules();
     }
@@ -61,12 +61,12 @@ SQL;
      */
     public function apply(Customer $customer, float $receipt): void
     {
-        if ($this->apply === true) {
+        if ($this->applicable === true) {
             $finalRule = [
                 'multiplier' => 1,
                 'add' => 0,
                 'percentage' => 0,
-                'discount' => 0,
+                'discount' => 0
             ];
             foreach ($this->rules as $rule) {
                 if ($this->checkRule($rule, $customer, $receipt)) {
@@ -144,6 +144,22 @@ WHERE date={date('Y-m-d')};
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         return !empty(mysqli_fetch_all($result));
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getHolidays():array
+    {
+        $sqlQuery = <<<SQL
+SELECT *
+FROM holidays;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result===false) {
+            throw new RuntimeException('Holidays not found');
+        }
+        return mysqli_fetch_all($result);
     }
 
     /**
@@ -274,5 +290,57 @@ SQL;
         }
 
         $this->user->log('rule change', $message);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApplicable(): bool
+    {
+        return $this->applicable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBasedOnBonuses(): bool
+    {
+        return $this->basedOnBonuses;
+    }
+
+    /**
+     * @param bool $applicable
+     */
+    public function setApplicable(bool $applicable): void
+    {
+        $sqlQuery = <<<SQL
+UPDATE settings
+SET apply_rules=$applicable
+WHERE id=1
+LIMIT 1;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Setting changing operation failed');
+        }
+        $this->applicable = $applicable;
+    }
+
+    /**
+     * @param bool $basedOnBonuses
+     */
+    public function setBasedOnBonuses(bool $basedOnBonuses): void
+    {
+        $sqlQuery = <<<SQL
+UPDATE settings
+SET bonuses=$basedOnBonuses
+WHERE id=1
+LIMIT 1;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Setting changing operation failed');
+        }
+        $this->basedOnBonuses = $basedOnBonuses;
     }
 }

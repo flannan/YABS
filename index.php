@@ -6,10 +6,17 @@ include_once __DIR__ . '/Database.php';
 include_once __DIR__ . '/User.php';
 include_once __DIR__ . '/Api.php';
 include_once __DIR__ . '/CustomersApi.php';
+include_once __DIR__ . '/SettingsApi.php';
 include_once __DIR__ . '/Rules.php';
 
 try {
-    $api = new flannan\YABS\CustomersApi();
+    $uri=explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+    if ($uri[1]==='customers') {
+        $api = new flannan\YABS\CustomersApi();
+    } elseif ($uri[1]==='settings') {
+        $api = new flannan\YABS\SettingsApi();
+    }
+
     echo $api->run();
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
