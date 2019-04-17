@@ -112,6 +112,11 @@ SQL;
      */
     private function writeCustomerToDatabase(): void
     {
+        $this->user->log(
+            'new customer',
+            'Покупатель ' . $this->name . ' добавляется в базу',
+            $this->customerId
+        );
         $sqlQuery = <<<SQL
 INSERT INTO cards(id,status)
 VALUES ($this->customerId,'Active');
@@ -135,12 +140,22 @@ SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
 
         if ($result === false) {
+            $this->user->log(
+                'error',
+                'Попытка добавить покупателя ' . $this->name . ' в базу не удалась',
+                $this->customerId
+            );
             $sqlQuery = <<<SQL
 DELETE FROM cards WHERE id={$this->customerId};
 SQL;
             mysqli_query($this->database->getConnection(), $sqlQuery);
             throw new RuntimeException('User adding operation failed');
         }
+        $this->user->log(
+            'new customer',
+            'Покупатель ' . $this->name . ' добавлен успешно',
+            $this->customerId
+        );
     }
 
     /** Выдаёт данные для передачи в клиентскую систему.
@@ -159,8 +174,8 @@ SQL;
             'birthDay' => $this->birthday[0],
             'birthMonth' => $this->birthday[1],
         ];
-  //      if ($this->birthday[2] !== null) {
-            $exportArray['birthYear'] = $this->birthday[2];
+        //      if ($this->birthday[2] !== null) {
+        $exportArray['birthYear'] = $this->birthday[2];
 //        }
         $exportArray['balance'] = $this->balance;
         $exportArray['discount'] = $this->discount;
@@ -191,11 +206,19 @@ SQL;
     {
         $this->retrieveBonuses();
         $newBalance = $this->balance + $change;
-        $this->setBonuses($newBalance);
+        if ($newBalance > 0) {
+            $this->user->log(
+                'bonuses',
+                'Изменение баланса бонусов',
+                $this->customerId,
+                $change
+            );
+            $this->setBonuses($newBalance);
+        }
     }
 
     /**
-     * @param int $newBalance
+     * @param float $newBalance
      */
     public function setBonuses(float $newBalance): void
     {
@@ -209,6 +232,12 @@ SQL;
             throw new RuntimeException('Balance update operation failed');
         }
         $this->balance = $newBalance;
+        $this->user->log(
+            'bonuses state',
+            'Новый баланс бонусов',
+            $this->customerId,
+            $newBalance
+        );
     }
 
     /**
@@ -226,6 +255,12 @@ SQL;
             throw new RuntimeException('Discount change operation failed');
         }
         $this->discount = $newDiscount;
+        $this->user->log(
+            'discount change',
+            'новое значение скидки',
+            $this->customerId,
+            $newDiscount
+        );
     }
 
     protected function retrieveCustomerData(): void
@@ -241,12 +276,12 @@ SQL;
         $this->name = $result[0];
         $this->gender = $result[1];
         $this->phone = $result[2];
-        $this->birthday[0] = (int) $result[3];
-        $this->birthday[1] = (int) $result[4];
+        $this->birthday[0] = (int)$result[3];
+        $this->birthday[1] = (int)$result[4];
         if ($result[5] === null) {
             $this->birthday[2] = null;
         } else {
-            $this->birthday[2] = (int) $result[5];
+            $this->birthday[2] = (int)$result[5];
         }
     }
 
@@ -264,6 +299,11 @@ SQL;
         if ($result === false) {
             throw new RuntimeException('Status change operation failed');
         }
+        $this->user->log(
+            'status change',
+            'Новый статус карты - ' . $newStatus,
+            $this->customerId
+        );
     }
 
     /**
@@ -299,7 +339,7 @@ SQL;
         if (isset($this->turnover) === false) {
             $this->retrieveBonuses();
         }
-        $newTurnover=$this->turnover + $receipt;
+        $newTurnover = $this->turnover + $receipt;
 
         $sqlQuery = <<<SQL
 UPDATE cards
@@ -311,5 +351,11 @@ SQL;
             throw new RuntimeException('Turnover update operation failed');
         }
         $this->turnover = $newTurnover;
+        $this->user->log(
+            'turnover',
+            'Зарегистрирован чек на сумму',
+            $this->customerId,
+            $receipt
+        );
     }
 }

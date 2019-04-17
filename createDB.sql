@@ -56,11 +56,12 @@ create table IF NOT EXISTS rules
 
 create table IF NOT EXISTS operations
 (
-    time      timestamp DEFAULT CURRENT_TIMESTAMP primary key,
-    user_name varchar(255),
-    type      varchar(10),
-    message   varchar(255),
-    value     DECIMAL(10, 2) null,
+    time        timestamp DEFAULT CURRENT_TIMESTAMP primary key,
+    user_name   varchar(255),
+    type        varchar(10),
+    customer_id BIGINT unsigned null,
+    message     varchar(255),
+    value       DECIMAL(10, 2)  null,
     foreign key (user_name) references users (name)
         ON DELETE SET NULL
 

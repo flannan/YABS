@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace flannan\YABS;
 
-use Exception;
 use RuntimeException;
 
 /** Базовый класс Api
@@ -44,7 +43,7 @@ abstract class Api
             } elseif ($_SERVER['HTTP_X_HTTP_METHOD'] === 'PUT') {
                 $this->method = 'PUT';
             } else {
-                throw new Exception('Unexpected Header');
+                throw new RuntimeException('Unexpected Header');
             }
         }
     }

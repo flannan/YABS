@@ -15,6 +15,7 @@ class User
 {
     private $userId;
     private $manager;
+    private $database;
 
     /**
      * User constructor.
@@ -27,6 +28,7 @@ class User
             throw new RuntimeException('Authentication required', 401);
         }
         $this->userId = $_SERVER['PHP_AUTH_USER'];
+        $this->database = $database;
 
         $sqlQuery = <<<SQL
 SELECT password, is_manager
@@ -34,12 +36,12 @@ FROM users
 WHERE name='{$this->userId}'
 LIMIT 1;
 SQL;
-        $result = mysqli_query($database->getConnection(), $sqlQuery);
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if ($result['password'] !== $_SERVER['PHP_AUTH_PW']) {
             throw new RuntimeException('Authentication failed', 401);
         }
-        $this->manager = (bool) $result['is_manager'];
+        $this->manager = (bool)$result['is_manager'];
     }
 
     /**
@@ -64,4 +66,24 @@ SQL;
             throw new RuntimeException('Access denied. Manager level necessary.');
         }
     }
+
+    /** Пишет в логи что скажут.
+     *
+     * @param string     $type
+     * @param string     $message
+     * @param int|null   $customerId
+     * @param float|null $value
+     */
+    public function log(string $type, string $message, int $customerId = null, float $value = null): void
+    {
+        $sqlQuery = <<<SQL
+INSERT INTO operations (user_name, type, customer_id, message, value)
+VALUE ('$this->userId','$type',$customerId,'$message',$value)
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Log writing failed');
+        }
+    }
+
 }
