@@ -7,6 +7,7 @@ include_once __DIR__ . '/User.php';
 include_once __DIR__ . '/Api.php';
 include_once __DIR__ . '/CustomersApi.php';
 include_once __DIR__ . '/SettingsApi.php';
+include_once __DIR__ . '/UsersApi.php';
 include_once __DIR__ . '/Rules.php';
 
 try {
@@ -15,6 +16,8 @@ try {
         $api = new flannan\YABS\CustomersApi();
     } elseif ($uri[1]==='settings') {
         $api = new flannan\YABS\SettingsApi();
+    } elseif ($uri[1]==='users') {
+        $api = new flannan\YABS\UsersApi();
     }
 
     echo $api->run();
