@@ -21,7 +21,10 @@ class CustomersApi extends Api
      */
     protected function indexAction()
     {
-        //TODO: выписка по карте.
+        $database = new Database();
+        $user = new User($database);
+        $customer = new Customer($this->requestParams, $this->action, $database, $user);
+        return $this->response($customer->getStatement(), 200);
     }
 
     /** выдаёт информацию о покупателе

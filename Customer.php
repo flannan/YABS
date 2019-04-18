@@ -41,10 +41,10 @@ class Customer
         $this->user = $user;
 
         if (array_key_exists('customer_id', $customerData) === true) {
-            $this->customerId = (string) $customerData['customer_id'];
+            $this->customerId = (string)$customerData['customer_id'];
         } elseif (array_key_exists('phone', $customerData) === true) {
-            $this->phone = (string) $customerData['phone'];
-            $this->customerId = (string) $this->getCardByPhone();
+            $this->phone = (string)$customerData['phone'];
+            $this->customerId = (string)$this->getCardByPhone();
         } else {
             throw new InvalidArgumentException('Not enough data to identify customer');
         }
@@ -172,7 +172,7 @@ SQL;
             'phone' => $this->phone,
             'gender' => $this->gender,
             'birthDay' => $this->birthday[0],
-            'birthMonth' => $this->birthday[1]
+            'birthMonth' => $this->birthday[1],
         ];
         //      if ($this->birthday[2] !== null) {
         $exportArray['birthYear'] = $this->birthday[2];
@@ -357,5 +357,22 @@ SQL;
             $this->customerId,
             $receipt
         );
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getStatement()
+    {
+        $sqlQuery = <<<SQL
+SELECT -sum(all operations.value) as totalBonusesUsed
+FROM operations
+WHERE customer_id=$this->customerId;
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('request failed');
+        }
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
 }
