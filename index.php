@@ -20,6 +20,8 @@ try {
         $api = new flannan\YABS\SettingsApi();
     } elseif ($uri[1] === 'users') {
         $api = new flannan\YABS\UsersApi();
+    } elseif ($uri[1] === 'holidays') {
+        $api = new flannan\YABS\HolidaysApi();
     }
 
     echo $api->run();

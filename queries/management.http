@@ -17,12 +17,6 @@ Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV
 
 ###
 
-GET http://hotel.rarus-crimea.ru/YABS/api/settings
-Content-Type: application/json
-Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
-
-###
-
 PUT http://hotel.rarus-crimea.ru/YABS/api/settings
 Content-Type: application/json
 Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=

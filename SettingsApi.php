@@ -29,11 +29,7 @@ class SettingsApi extends Api
      */
     protected function indexAction()
     {
-        $database = new Database();
-        $user = new User($database);
-        $rules = new Rules($database, $user);
-        $response = $rules->getHolidays();
-        return $this->response($response, 200);
+        return $this->viewAction();
     }
 
     /**Выдаёт настройки и список правил
