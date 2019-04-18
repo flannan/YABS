@@ -214,6 +214,8 @@ SQL;
                 $change
             );
             $this->setBonuses($newBalance);
+        } else {
+            throw new RuntimeException('Not enough bonuses');
         }
     }
 

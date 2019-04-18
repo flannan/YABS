@@ -5,9 +5,108 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-GET http://alias/api/management
+GET http://hotel.rarus-crimea.ru/YABS/api/customers
 Content-Type: application/json
 Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
 
+###
+
+GET http://hotel.rarus-crimea.ru/YABS/api/settings/1
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
 
 ###
+
+GET http://hotel.rarus-crimea.ru/YABS/api/settings
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+###
+
+PUT http://hotel.rarus-crimea.ru/YABS/api/settings
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "applicable": true,
+  "basedOnBonuses": true
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/settings
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "id": 1,
+  "type": "birthday",
+  "condition_value": 0,
+  "bonus": 0,
+  "multiplier": 2,
+  "percentage": 0,
+  "discount": 0
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/settings
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "type": "dates",
+  "condition_value": 0,
+  "bonus": 0,
+  "multiplier": 2,
+  "percentage": 0,
+  "discount": 0
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/settings
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "type": "lump_sum",
+  "condition_value": 0,
+  "bonus": 0,
+  "multiplier": 1,
+  "percentage": 0.05,
+  "discount": 0
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/settings
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "type": "lump_sum",
+  "condition_value": 100,
+  "bonus": 10,
+  "multiplier": 1,
+  "percentage": 0,
+  "discount": 0
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/settings
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "type": "turnover",
+  "condition_value": 1000,
+  "bonus": 0,
+  "multiplier": 1,
+  "percentage": 0.10,
+  "discount": 0
+}
+
+###
+

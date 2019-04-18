@@ -317,17 +317,8 @@ SQL;
      */
     public function setApplicable(bool $applicable): void
     {
-        $sqlQuery = <<<SQL
-UPDATE settings
-SET apply_rules=$applicable
-WHERE id=1
-LIMIT 1;
-SQL;
-        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
-        if ($result === false) {
-            throw new RuntimeException('Setting changing operation failed');
-        }
         $this->applicable = $applicable;
+        $this->setSettings();
     }
 
     /**
@@ -335,16 +326,22 @@ SQL;
      */
     public function setBasedOnBonuses(bool $basedOnBonuses): void
     {
+        $this->basedOnBonuses = $basedOnBonuses;
+        $this->setSettings();
+    }
+
+    private function setSettings(): void
+    {
+        $basedOnBonuses=(int)$this->basedOnBonuses;
+        $applicable=(int)$this->applicable;
         $sqlQuery = <<<SQL
-UPDATE settings
-SET bonuses=$basedOnBonuses
-WHERE id=1
-LIMIT 1;
+REPLACE 
+    INTO settings (id, bonuses, apply_rules) 
+VALUES (1, $basedOnBonuses , $applicable);
 SQL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         if ($result === false) {
             throw new RuntimeException('Setting changing operation failed');
         }
-        $this->basedOnBonuses = $basedOnBonuses;
     }
 }

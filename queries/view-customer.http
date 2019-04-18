@@ -5,13 +5,13 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-GET http://alias/api/customers/1234567890
+GET http://hotel.rarus-crimea.ru/YABS/api/customers/1234567890
 Content-Type: application/json
 Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
 
 ###
 
-GET http://alias/api/customers/2
+GET http://hotel.rarus-crimea.ru/YABS/api/customers/2
 Content-Type: application/json
 Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
 
@@ -19,7 +19,7 @@ Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzd
 ###
 
 
-GET http://alias/api/customers/3
+GET http://hotel.rarus-crimea.ru/YABS/api/customers/3
 Content-Type: application/json
 Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk=
 
@@ -29,7 +29,7 @@ Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF
 
 ###
 
-GET http://alias/api/customers/1234567890
+GET http://hotel.rarus-crimea.ru/YABS/api/customers/еку
 Content-Type: application/json
 Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
 

@@ -5,9 +5,9 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-POST http://alias/api/customers
+POST http://hotel.rarus-crimea.ru/YABS/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk
 
 {
   "name": "Иванов Иван Иванович",
@@ -21,9 +21,9 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 ###
 
-POST http://alias/api/customers
+POST http://hotel.rarus-crimea.ru/YABS/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk
 
 {
   "name": "Анна",
@@ -36,9 +36,9 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 ###
 
-POST http://alias/api/customers
+POST http://hotel.rarus-crimea.ru/YABS/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk
 
 {
   "name": "Мария Соколова",
@@ -51,9 +51,9 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 ###
 
-POST http://alias/api/customers
+POST http://hotel.rarus-crimea.ru/YABS/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk
 
 {
   "name": "Юлия Виноградова",
@@ -68,9 +68,9 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 ###
 
 
-POST http://alias/api/customers
+POST http://hotel.rarus-crimea.ru/YABS/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6cXdlcnR5
+Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk
 
 {
   "name": "Валерий Виноградов",
