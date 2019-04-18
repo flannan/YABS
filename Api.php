@@ -104,7 +104,7 @@ abstract class Api
         $method = $this->method;
         switch ($method) {
             case 'GET':
-                if ($this->requestUri) {
+                if ($this->requestUri[2]) {
                     $action = 'viewAction';
                 } else {
                     $action = 'indexAction';

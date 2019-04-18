@@ -5,7 +5,31 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-GET http://alias/api/customers
+GET http://alias/api/customers/1234567890
+Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
+
+###
+
+GET http://alias/api/customers/2
+Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
+
+
+###
+
+
+GET http://alias/api/customers/3
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk=
+
+{
+  "customer_id": "3"
+}
+
+###
+
+GET http://alias/api/customers/1234567890
 Content-Type: application/json
 Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
 
@@ -17,21 +41,6 @@ Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzd
 
 GET http://alias/api/customers
 Content-Type: application/json
-Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
-
-{
-  "customer_id": "2"
-}
-
-###
-
-
-GET http://alias/api/customers
-Content-Type: application/json
-Authorization: Basic bWFuYWdlcjokMnkkMTAkdGZqbFFTdmtWOFZld21ISUlNdHVRLlJQb0NURUF1VXcwNmFxNG9jL3BmOGZBU1cuc2pGVnk=
-
-{
-  "customer_id": "3"
-}
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
 
 ###
