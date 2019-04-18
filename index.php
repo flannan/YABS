@@ -11,10 +11,10 @@ include_once __DIR__ . '/UsersApi.php';
 include_once __DIR__ . '/HolidaysApi.php';
 include_once __DIR__ . '/Rules.php';
 
+$currentDirSize = strrpos($_SERVER['SCRIPT_NAME'], '/');
+$uri = trim(substr($_SERVER['REQUEST_URI'], $currentDirSize), '/');
+$uri = explode('/', $uri);
 try {
-    $currentDirSize = strrpos($_SERVER['SCRIPT_NAME'], '/');
-    $uri = trim(substr($_SERVER['REQUEST_URI'], $currentDirSize), '/');
-    $uri = explode('/', $uri);
     if ($uri[1] === 'customers') {
         $api = new flannan\YABS\CustomersApi();
     } elseif ($uri[1] === 'settings') {
@@ -25,7 +25,11 @@ try {
         $api = new flannan\YABS\HolidaysApi();
     }
 
-    echo $api->run();
+    if (isset($api)===true) {
+        echo $api->run();
+    } else {
+        header('Location: controlBox.php');
+    }
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);
 }
