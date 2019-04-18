@@ -8,6 +8,7 @@ include_once __DIR__ . '/Api.php';
 include_once __DIR__ . '/CustomersApi.php';
 include_once __DIR__ . '/SettingsApi.php';
 include_once __DIR__ . '/UsersApi.php';
+include_once __DIR__ . '/HolidaysApi.php';
 include_once __DIR__ . '/Rules.php';
 
 try {

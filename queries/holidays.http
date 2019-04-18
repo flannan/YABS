@@ -15,4 +15,162 @@ POST http://hotel.rarus-crimea.ru/YABS/api/holidays
 Content-Type: application/json
 Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
 
+{
+  "name": "Новогодние каникулы",
+  "date": "1 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Новогодние каникулы",
+  "date": "2 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Новогодние каникулы",
+  "date": "3 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Новогодние каникулы",
+  "date": "4 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Новогодние каникулы",
+  "date": "5 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Новогодние каникулы",
+  "date": "6 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Рождество Христово",
+  "date": "7 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Новогодние каникулы",
+  "date": "8 january"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "День защитника Отечества",
+  "date": "23-02-2019"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Международный женский день",
+  "timestamp": "1552044721"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "Праздник Весны и Труда",
+  "date": "1 May"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "День Победы",
+  "date": "9-05-2019"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "День России",
+  "date": "12 june"
+}
+
+###
+
+POST http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "name": "День народного единства",
+  "date": "4 november"
+}
+
+###
+
+DELETE http://hotel.rarus-crimea.ru/YABS/api/holidays
+Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
+
+{
+  "date": "23-02-2019"
+}
+
 ###

@@ -37,9 +37,12 @@ class HolidaysApi extends Api
         return $this->response($response, 200);
     }
 
+    /**
+     * @return false|string
+     */
     protected function viewAction()
     {
-        // TODO: Implement viewAction() method.
+        return $this->indexAction();
     }
 
     /**
@@ -50,24 +53,51 @@ class HolidaysApi extends Api
         $database = new Database();
         $user = new User($database);
         $rules = new Rules($database, $user);
+        $user->requireManager();
         if (array_key_exists('timestamp', $this->requestParams)) {
-            $rules->addHoliday($this->requestParams['timestamp'], $this->requestParams['name']);
+            $rules->addHoliday((int) $this->requestParams['timestamp'], $this->requestParams['name']);
         } elseif (array_key_exists('date', $this->requestParams)) {
-            $rules->addHoliday(strtotime($this->requestParams['date']), $this->requestParams['name']);
+            $timestamp=strtotime($this->requestParams['date']);
+            if ($timestamp === false) {
+                throw new RuntimeException('holiday date parsing failed');
+            }
+            $rules->addHoliday($timestamp, $this->requestParams['name']);
         } else {
-            throw new \RuntimeException('holiday date not found');
+            throw new RuntimeException('holiday date not found');
         }
 
         return $this->response('holiday added successfully', 200);
     }
 
+    /**
+     * @return false|string
+     */
     protected function updateAction()
     {
-        // TODO: Implement updateAction() method.
+        return $this->response('API not implemented', 405);
     }
 
+    /**
+     * @return false|string
+     */
     protected function deleteAction()
     {
-        // TODO: Implement deleteAction() method.
+        $database = new Database();
+        $user = new User($database);
+        $rules = new Rules($database, $user);
+        $user->requireManager();
+        if (array_key_exists('timestamp', $this->requestParams)) {
+            $rules->removeHoliday((int) $this->requestParams['timestamp']);
+        } elseif (array_key_exists('date', $this->requestParams)) {
+            $timestamp=strtotime($this->requestParams['date']);
+            if ($timestamp === false) {
+                throw new RuntimeException('holiday date parsing failed');
+            }
+            $rules->removeHoliday($timestamp);
+        } else {
+            throw new RuntimeException('holiday date not found');
+        }
+
+        return $this->response('holiday deleted successfully', 200);
     }
 }

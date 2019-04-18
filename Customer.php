@@ -364,7 +364,7 @@ SQL;
     /**
      * @return array|null
      */
-    public function getStatement()
+    public function getStatement(): ?array
     {
         $sqlQuery = <<<SQL
 SELECT -sum(all operations.value) as totalBonusesUsed

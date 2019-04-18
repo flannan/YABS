@@ -67,9 +67,9 @@ SQL;
                 'multiplier' => 1,
                 'add' => 0,
                 'percentage' => 0,
-                'discount' => 0
+                'discount' => 0,
             ];
-            foreach ((array) $this->rules as $rule) {
+            foreach ((array)$this->rules as $rule) {
                 if ($this->checkRule($rule, $customer, $receipt)) {
                     $finalRule = $this->sumRules($finalRule, $rule);
                 }
@@ -169,17 +169,39 @@ SQL;
      */
     public function addHoliday(int $timestamp, string $name): void
     {
+        $dateString = date('Y-m-d', $timestamp);
         $sqlQuery = <<<SQL
 INSERT INTO holidays
-VALUES ({date('Y-m-d',$timestamp)},'$name')
+VALUES ('$dateString','$name')
 SQL;
+        echo $sqlQuery . PHP_EOL;
         $result = mysqli_query($this->database->getConnection(), $sqlQuery);
         if ($result === false) {
             throw new RuntimeException('Holiday date adding operation failed');
         }
         $this->user->log(
             'new holiday',
-            'День ' . date('Y-m-d', $timestamp) . ' объявлен праздничным и называется ' . $name
+            'День ' . $dateString . ' объявлен праздничным и называется ' . $name
+        );
+    }
+
+    /**
+     * @param int $timestamp
+     */
+    public function removeHoliday(int $timestamp): void
+    {
+        $dateString = date('Y-m-d', $timestamp);
+        $sqlQuery = <<<SQL
+DELETE FROM holidays
+WHERE date='$dateString'
+SQL;
+        $result = mysqli_query($this->database->getConnection(), $sqlQuery);
+        if ($result === false) {
+            throw new RuntimeException('Holiday date removal operation failed');
+        }
+        $this->user->log(
+            'new holiday',
+            'День ' . $dateString . ' исключён из списка праздничных'
         );
     }
 
@@ -332,8 +354,8 @@ SQL;
 
     private function setSettings(): void
     {
-        $basedOnBonuses=(int)$this->basedOnBonuses;
-        $applicable=(int)$this->applicable;
+        $basedOnBonuses = (int)$this->basedOnBonuses;
+        $applicable = (int)$this->applicable;
         $sqlQuery = <<<SQL
 REPLACE 
     INTO settings (id, bonuses, apply_rules) 
