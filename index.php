@@ -11,12 +11,14 @@ include_once __DIR__ . '/UsersApi.php';
 include_once __DIR__ . '/Rules.php';
 
 try {
-    $uri=explode('/', trim($_SERVER['REQUEST_URI'], '/'));
-    if ($uri[1]==='customers') {
+    $currentDirSize = strrpos($_SERVER['SCRIPT_NAME'], '/');
+    $uri = trim(substr($_SERVER['REQUEST_URI'], $currentDirSize), '/');
+    $uri = explode('/', $uri);
+    if ($uri[1] === 'customers') {
         $api = new flannan\YABS\CustomersApi();
-    } elseif ($uri[1]==='settings') {
+    } elseif ($uri[1] === 'settings') {
         $api = new flannan\YABS\SettingsApi();
-    } elseif ($uri[1]==='users') {
+    } elseif ($uri[1] === 'users') {
         $api = new flannan\YABS\UsersApi();
     }
 

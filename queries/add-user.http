@@ -5,12 +5,14 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-POST http://requestbin.fullcontact.com/vufxmpvu
+POST http://hotel.rarus-crimea.ru/YABS/api/users/
 Content-Type: application/json
+Authorization: Basic bWFuYWdlcjokMnkkMTAkczZrbWpXbGpZYWwyb0RBTEk1Ymc3dW1JRzl6NDV3M3kwSmh1Zi5ZeDhOUHBiOFdGeXA1Wm0=
 
 {
-  "name": "ivan",
-  "second_name": "ivanov"
+  "name": "cashier1",
+  "password": "qwerty",
+  "is_manager": 0
 }
 
 ###

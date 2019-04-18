@@ -32,7 +32,9 @@ abstract class Api
         header('Content-Type: application/json');
 
         //Массив GET параметров разделенных слешем
-        $this->requestUri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+        $currentDirSize = strrpos($_SERVER['SCRIPT_NAME'], '/');
+        $uri = trim(substr($_SERVER['REQUEST_URI'], $currentDirSize), '/');
+        $this->requestUri = explode('/', $uri);
         $this->requestParams = json_decode(file_get_contents('php://input'), true);
 
         //Определение метода запроса

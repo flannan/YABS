@@ -19,6 +19,20 @@ class Database
     private $host = 'localhost';
     private $port = 3306;
 
+    public function __construct()
+    {
+        $filename = 'database.json';
+        if (is_file($filename) === true) {
+            $json = file_get_contents($filename);
+            $settings = json_decode($json, true);
+            $this->login=$settings('login');
+            $this->password=$settings('password');
+            $this->databaseName=$settings('databaseName');
+            $this->host=$settings('host');
+            $this->port=$settings('port');
+        }
+    }
+
     /** Выдаёт ссылку для работы с базой данных.
      *
      * @return \mysqli

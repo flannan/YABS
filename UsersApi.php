@@ -20,7 +20,7 @@ class UsersApi extends Api
     public function __construct()
     {
         parent::__construct();
-        $this->apiName = 'customers';
+        $this->apiName = 'users';
     }
 
     /** Возвращает список пользователей.
