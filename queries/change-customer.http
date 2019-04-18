@@ -18,6 +18,18 @@ Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 PUT http://alias/api/customers
 Content-Type: application/json
+Authorization: Basic Y2FzaGllcjE6JDJ5JDEwJGNaTGZ5QmMuVEY0TUJuN2dFYzlvN3VWTjIxYzdtcGs4dm5DMi4zVUJ1UDM0N2N3a2hOZTNX
+
+{
+  "customer_id": "3",
+  "changeBonus": "-50"
+}
+
+###
+
+
+PUT http://alias/api/customers
+Content-Type: application/json
 Authorization: Basic Y2FzaGllcjE6cXdlcnR5
 
 {

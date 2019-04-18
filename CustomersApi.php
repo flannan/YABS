@@ -21,7 +21,7 @@ class CustomersApi extends Api
      */
     protected function indexAction()
     {
-        return $this->response('API not implemented', 405);
+        //TODO: выписка по карте.
     }
 
     /** выдаёт информацию о покупателе
