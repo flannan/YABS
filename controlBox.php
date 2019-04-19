@@ -39,20 +39,28 @@ $options = [
         'method' => 'GET',
         'content' => json_encode($data),
         'header' => 'Content-Type: application/json' . PHP_EOL .
-            'Authorization: Basic ' . $authorization . PHP_EOL
-    ]
+            'Authorization: Basic ' . $authorization . PHP_EOL,
+    ],
 ];
 $url = 'http://hotel.rarus-crimea.ru/YABS/api/customers';
 $context = stream_context_create($options);
 $result = file_get_contents($url, false, $context);
 $response = json_decode($result, true);
-if ($response['totalBonusesUsed'] === null) {
-    $response['totalBonusesUsed'] = 0;
+if (isset($response['error']) === true) {
+    echo '<p style="color: red;"> Ошибка запроса "'
+        . $response['error'] .
+        '". Дальнейшая информация скорее всего неверна </p>';
+} else {
+    if ($response['totalBonusesUsed'] === null) {
+        $response['totalBonusesUsed'] = 0;
+    }
+    ?>
+    <p>Количество пользователей с картами: <?php echo $response['numberOfCards'] ?> человек</p>
+    <p>Сумма бонусов на картах: <?php echo $response['totalBonuses'] ?> бонусных рублей</p>
+    <p>Бонусов потрачено за всё время: <?php echo $response['totalBonusesUsed'] ?> бонусных рублей</p>
+    <?php
 }
 ?>
-<p>Количество пользователей с картами: <?php echo $response['numberOfCards'] ?> человек</p>
-<p>Сумма бонусов на картах: <?php echo $response['totalBonuses'] ?> бонусных рублей</p>
-<p>Бонусов потрачено за всё время: <?php echo $response['totalBonusesUsed'] ?> бонусных рублей</p>
 
 <?php
 $url = 'http://hotel.rarus-crimea.ru/YABS/api/settings/1';
@@ -80,12 +88,23 @@ $response = json_decode($result, true);
         border: 1px solid black;
         border-spacing: 10px;
     }
-    th, td { padding: 5px; }
+
+    th, td {
+        padding: 5px;
+    }
 </style>
 <table style="border-collapse: collapse; ">
-    <tr><td>№</td><td>тип</td><td>условие</td><td>бонус</td><td>множитель</td><td>процент</td><td>скидка</td></tr>
+    <tr>
+        <td>№</td>
+        <td>тип</td>
+        <td>условие</td>
+        <td>бонус</td>
+        <td>множитель</td>
+        <td>процент</td>
+        <td>скидка</td>
+    </tr>
     <?php
-    foreach ((array) $response['rules'] as $rule) {
+    foreach ((array)$response['rules'] as $rule) {
         echo '<tr>';
         foreach ($rule as $data) {
             echo "<td> $data </td>";

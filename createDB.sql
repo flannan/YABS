@@ -19,7 +19,7 @@ create table IF NOT EXISTS cards
     status   varchar(255),
     balance  DECIMAL(10, 2) null,
     discount DECIMAL(10, 2) null,
-    turnover DECIMAL        not null default 0
+    turnover DECIMAL(10, 2) not null default 0
 ) DEFAULT CHARACTER SET = 'utf8';
 
 create table IF NOT EXISTS customers
